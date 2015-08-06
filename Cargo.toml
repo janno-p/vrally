@@ -1,0 +1,10 @@
+[package]
+name = "vrally"
+version = "0.1.0"
+authors = ["Janno Põldma <janno.poldma@gmail.com>"]
+
+[dependencies]
+piston = "*"
+piston2d-graphics = "*"
+pistoncore-sdl2_window = "*"
+piston2d-opengl_graphics = "*"
