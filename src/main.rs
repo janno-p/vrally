@@ -50,7 +50,7 @@ fn main() {
         app.update(&clock.restart());
 
         window.clear(&Color::green());
-        app.draw(&mut window);
+        window.draw(&app);
         window.display();
     }
 }
