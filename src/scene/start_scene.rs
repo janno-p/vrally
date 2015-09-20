@@ -1,6 +1,22 @@
-use scene::*;
+use scene::Scene;
+use sfml::graphics::{RenderTarget,RenderWindow,Sprite,Texture};
+use sfml::system::Vector2f;
+use sfml::traits::Drawable;
 
-struct StartSceneResources {
+struct Panel;
+
+impl Panel {
+    fn process_input(&self) { }
+}
+
+impl Drawable for Panel {
+    fn draw<RT: RenderTarget>(&self, _: &mut RT) {
+
+    }
+}
+
+pub struct StartSceneResources {
+    /*
     data_font: Font,
     panel_font: Font,
     button_font: Font,
@@ -16,40 +32,40 @@ struct StartSceneResources {
     previous_button_texture: Texture,
     next_button_texture: Texture,
     go_button_texture: Texture,
-    background_texture: Texture,
-    driver_texture: Texture
+    */
+    pub background_texture: Texture,
+    //driver_texture: Texture,
 }
 
-struct StartScene {
-    resources: StartSceneResources,
+pub struct StartScene<'x> {
     panel1: Panel,
     panel2: Panel,
     panel3: Panel,
-    panel4: Panel
+    panel4: Panel,
+    background_sprite: Sprite<'x>
 }
 
-impl Scene for StartScene {
-    fn process_input() {
-        panel1.process_input();
-        panel2.process_input();
-        panel4.process_input();
+impl<'x> StartScene<'x> {
+    pub fn new(resources: &'x StartSceneResources, target: &RenderWindow) -> StartScene<'x> {
+        let size = target.get_size();
+        let mut background_sprite = Sprite::new_with_texture(&resources.background_texture).expect("Cannot create sprite!");
+        background_sprite.set_position(&Vector2f::new(0., 0.));
+        background_sprite.set_scale(&Vector2f::new((size.x as f32) / 512., (size.y as f32) / 256.));
+        StartScene {
+            panel1: Panel,
+            panel2: Panel,
+            panel3: Panel,
+            panel4: Panel,
+            background_sprite: background_sprite
+        }
     }
+}
 
-    fn do_frame(&self, delta: f64) {
-        Sprite::begin();
-        Sprite::set_transform(0., 0., Graphics::get_width() / 512., Graphics::get_height() / 256.);
-        Sprite::draw(self.resources.background_texture);
-        Sprite::reset_transform();
-        Sprite::end();
-
-        self.panel1.do_frame(delta);
-        self.panel2.do_frame(delta);
-        self.panel3.do_frame(delta);
-        self.panel4.do_frame(delta);
-    }
-
-    fn do_idle_frame(delta: f64) {
-
+impl<'x> Scene for StartScene<'x> {
+    fn process_input(&self) {
+        self.panel1.process_input();
+        self.panel2.process_input();
+        self.panel4.process_input();
     }
 
     fn device_lost() {
@@ -58,5 +74,15 @@ impl Scene for StartScene {
 
     fn device_reset() {
 
+    }
+}
+
+impl<'x> Drawable for StartScene<'x> {
+    fn draw<RT: RenderTarget>(&self, target: &mut RT) {
+        target.draw(&self.background_sprite);
+        target.draw(&self.panel1);
+        target.draw(&self.panel2);
+        target.draw(&self.panel3);
+        target.draw(&self.panel4);
     }
 }

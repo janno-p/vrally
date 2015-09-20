@@ -3,7 +3,7 @@ extern crate sfml;
 use sfml::system::Vector2f;
 use sfml::window::{ ContextSettings, VideoMode, event, Close };
 use sfml::window::keyboard::Key;
-use sfml::graphics::{ RenderWindow, RenderTarget, CircleShape, Color };
+use sfml::graphics::{ RenderWindow, RenderTarget, CircleShape, Color, Texture };
 
 mod scene;
 
@@ -18,6 +18,12 @@ fn main() {
     circle.set_fill_color(&Color::red());
     circle.set_position(&Vector2f::new(100., 100.));
 
+    let resources = scene::start_scene::StartSceneResources {
+        background_texture: Texture::new_from_file("data/Images/background.jpg").expect("Cannot create texture!")
+    };
+
+    let start_scene = scene::start_scene::StartScene::new(&resources, &window);
+
     while window.is_open() {
         for event in window.events() {
             match event {
@@ -29,6 +35,7 @@ fn main() {
 
         window.clear(&Color::new_rgb(0, 200, 200));
         window.draw(&circle);
+        window.draw(&start_scene);
         window.display();
     }
 }
