@@ -1,42 +1,28 @@
 extern crate sfml;
 
-use sfml::graphics::{ RenderWindow, RenderTarget, RectangleShape, Color };
-use sfml::system::{ Vector2f, Clock, Time };
-use sfml::traits::Drawable;
+use sfml::system::Vector2f;
 use sfml::window::{ ContextSettings, VideoMode, event, Close };
 use sfml::window::keyboard::Key;
+use sfml::graphics::{ RenderWindow, RenderTarget, CircleShape, Color, Texture };
 
-struct App {
-    rotation: f32
-}
-
-impl App {
-    fn update(&mut self, dt: &Time) {
-        self.rotation += 120. * dt.as_seconds();
-    }
-}
-
-impl Drawable for App {
-    fn draw<RT:RenderTarget>(&self, target: &mut RT) {
-        let mut square = RectangleShape::new().expect("Error, cannot create rectangle.");
-        square.set_position(&Vector2f::new(75., 75.));
-        square.set_size(&Vector2f::new(50., 50.));
-        square.set_rotation(self.rotation);
-        square.set_fill_color(&Color::red());
-        square.set_origin(&Vector2f::new(25., 25.));
-        target.draw(&square);
-    }
-}
+mod scene;
 
 fn main() {
     let mut window = RenderWindow::new(VideoMode::new_init(800, 600, 32),
-                                       "vrally",
+                                       "SFML Example",
                                        Close,
-                                       &ContextSettings::default())
-                       .expect("Cannot create a new Render Window.");
+                                       &ContextSettings::default()).expect("Cannot create a new Render Window.");
 
-    let mut app = App { rotation: 0. };
-    let mut clock = Clock::new();
+    let mut circle = CircleShape::new().expect("Error, cannot create ball");
+    circle.set_radius(30.);
+    circle.set_fill_color(&Color::red());
+    circle.set_position(&Vector2f::new(100., 100.));
+
+    let resources = scene::start_scene::StartSceneResources {
+        background_texture: Texture::new_from_file("data/Images/background.jpg").expect("Cannot create texture!")
+    };
+
+    let start_scene = scene::start_scene::StartScene::new(&resources, &window);
 
     while window.is_open() {
         for event in window.events() {
@@ -47,10 +33,9 @@ fn main() {
             }
         }
 
-        app.update(&clock.restart());
-
-        window.clear(&Color::green());
-        window.draw(&app);
+        window.clear(&Color::new_rgb(0, 200, 200));
+        window.draw(&circle);
+        window.draw(&start_scene);
         window.display();
     }
 }
