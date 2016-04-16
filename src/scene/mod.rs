@@ -1,4 +1,4 @@
-use sfml::traits::Drawable;
+use sfml::graphics::Drawable;
 
 /*
 pub enum GameState {

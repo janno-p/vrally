@@ -1,7 +1,12 @@
 use scene::Scene;
-use sfml::graphics::{RenderTarget,RenderWindow,Sprite,Texture};
+use sfml::graphics::{ Drawable,
+                      RenderStates,
+                      RenderTarget,
+                      RenderWindow,
+                      Sprite,
+                      Texture,
+                      Transformable };
 use sfml::system::Vector2f;
-use sfml::traits::Drawable;
 
 struct Panel;
 
@@ -10,7 +15,7 @@ impl Panel {
 }
 
 impl Drawable for Panel {
-    fn draw<RT: RenderTarget>(&self, _: &mut RT) {
+    fn draw<RT: RenderTarget>(&self, _: &mut RT, _: &mut RenderStates) {
 
     }
 }
@@ -78,7 +83,7 @@ impl<'x> Scene for StartScene<'x> {
 }
 
 impl<'x> Drawable for StartScene<'x> {
-    fn draw<RT: RenderTarget>(&self, target: &mut RT) {
+    fn draw<RT: RenderTarget>(&self, target: &mut RT, _: &mut RenderStates) {
         target.draw(&self.background_sprite);
         target.draw(&self.panel1);
         target.draw(&self.panel2);

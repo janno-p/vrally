@@ -1,16 +1,25 @@
 extern crate sfml;
 
 use sfml::system::Vector2f;
-use sfml::window::{ ContextSettings, VideoMode, event, Close };
-use sfml::window::keyboard::Key;
-use sfml::graphics::{ RenderWindow, RenderTarget, CircleShape, Color, Texture };
+use sfml::window::{ ContextSettings,
+                    VideoMode,
+                    event,
+                    window_style };
+use sfml::window::Key;
+use sfml::graphics::{ RenderWindow,
+                      RenderTarget,
+                      CircleShape,
+                      Color,
+                      Shape,
+                      Texture,
+                      Transformable };
 
 mod scene;
 
 fn main() {
     let mut window = RenderWindow::new(VideoMode::new_init(800, 600, 32),
                                        "SFML Example",
-                                       Close,
+                                       window_style::CLOSE,
                                        &ContextSettings::default()).expect("Cannot create a new Render Window.");
 
     let mut circle = CircleShape::new().expect("Error, cannot create ball");
